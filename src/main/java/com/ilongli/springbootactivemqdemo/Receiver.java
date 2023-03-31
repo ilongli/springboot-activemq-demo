@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.jms.Session;
+import java.util.Objects;
 
 /**
  * @author ilongli
@@ -19,8 +20,23 @@ public class Receiver {
     @JmsListener(destination = "test-queue", containerFactory = "queueListenerFactory")
     public void testQueueHandler(String msg) {
         log.info("接收到test-queue的消息: {}", msg);
+        /*try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }*/
+
+        if (Objects.equals(msg, "hello")) {
+            // 模拟报错
+            log.error("报错了xxx");
+            throw new IllegalArgumentException("参数不合法!!!");
+
+        }
+
+        log.info("处理test-queue的消息完毕: {}", msg);
+
         // 故意报错
-        int i = 1 / 0;
+//        int i = 1 / 0;
     }
 
     @JmsListener(destination = "test-topic", containerFactory = "topicListenerFactory")
